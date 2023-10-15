@@ -3,22 +3,23 @@
 #include <string.h>
 
 
-struct Jugador{
+struct Player{ //Creacion de estructura del jugador y la maquina
 char Nombre[50];
 int Vida;
 };
 
-struct Carta{
+typedef struct Carta{ // Creacion de estructura de la carta
 char Name[50];
 char Type[50];
 int LP;
 int AP;
 int DP;
-};
+}Cartass;
 
 struct Historial{
 
 };
+
 
 int main()
 {
@@ -38,16 +39,47 @@ int main()
             Retry = 0;
             break;
         }
+        else
         if(Select == 2){ //Crear una carta
             printf("Entering the card creator...\n");
+            struct Carta ncarta;
+            FILE *file;
+
+            printf("Welcome to the card creator!\n Please enter the values of the cards.\n");
             
+            printf("Name: "); //Nombre de carta
+            scanf("%s", &ncarta.Name);
+
+            printf("Type: "); //Tipo de carta
+            scanf("%s", &ncarta.Type);
+
+            printf("Life points: "); // Puntos de vida
+            scanf("%d", &ncarta.LP);
+
+            printf("Attack points: "); //Puntos de ataque
+            scanf("%d", &ncarta.AP);
+
+            printf("Defense points: "); // Puntos de defensa
+            scanf("%d", &ncarta.DP);
+            file = fopen("Cartas.txt", "a");
+            if(file ==NULL){ //En caso de no encontrar el .txt
+                printf("Error while opening the file");
+            }
+            fprintf(file, "%s,%s,%d,%d,%d\n", ncarta.Name, ncarta.Type, ncarta.LP, ncarta.AP, ncarta.DP); //Se pone la carta en el .txt
+
+            fclose(file); //Cerrar archivo .txt
+
+        printf("Card created and saved in 'Cartas.txt'!\n");
+        
             continue;
         }
+        else
         if(Select == 3){ //Mostrar historial
             printf("Now showing past outcomes...\n");
 
             continue;
         }
+        else
         if(Select == 4){ //Salir del juego
             printf("Goodbye, Player!\n");
             exit(0);
@@ -56,36 +88,37 @@ int main()
             printf("That's not a valid option!");
             continue;
         }
-
     }
 
-    struct Carta cartas[100]; //Creación de struct
-
+    struct Carta cartas[60]; //Baraja principal
+    struct Carta cartasJugador[15]; //Baraja del jugador
+    struct Carta cartasMaquina[15]; //Baraja de la maquina
+    
     int NumeroCartas = 0; //Contador de cartas
 
-    while (fscanf(file, "%s %s %d %d %d", cartas[NumeroCartas].Name, //Leer cartas desde archivo
-    cartas[NumeroCartas].Type,&cartas[NumeroCartas].AP,&cartas[NumeroCartas].LP,&cartas[NumeroCartas].DP) == 5) {
+    char line[100];
+    while (fgets(line, 100, file) != NULL)
+        {
+            if(NumeroCartas >= 100){
+                printf("\nMax deck size reached! (100)");
+                break;
+            }
 
-        NumeroCartas++;
+            char *token;
+            
+            token = strtok(line, ",");
+            char _name[50];
+            strcpy(_name, token);
 
-        if (NumeroCartas >= 60) {
-            printf("Cantidad de prueba excedidad (60).\n");
-            break;
+            token = strtok(NULL, ",");
+            char _type[50];
+            strcpy(_type, token);
+            
+            int LP = atoi(strtok(NULL, ","));
+            int AP = atoi(strtok(NULL, ","));
+            int DP = atoi(strtok(NULL, ","));
         }
-    }
-    
 
     fclose(file);
-
-    //Sistema de pelea
-
-
-
-
-    printf("List of cards\n");//Imprimir las cartas existentes
-    for (int i = 0; i < NumeroCartas; i++) {
-        printf("Name: %s, Type: %s, Life: %d, Attack: %d, Defense: %d\n", cartas[i].Name,
-        cartas[i].Type, cartas[i].LP, cartas[i].AP, cartas[i].DP);
-    }
     return 0;
 }
