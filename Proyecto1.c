@@ -8,13 +8,13 @@ char Nombre[50];
 int Vida;
 };
 
-typedef struct Carta{
+struct Carta{
 char Name[50];
 char Type[50];
 int LP;
 int AP;
 int DP;
-}Cartass;
+};
 
 struct Historial{
 
@@ -40,35 +40,7 @@ int main()
         }
         if(Select == 2){ //Crear una carta
             printf("Entering the card creator...\n");
-            struct Carta ncarta;
-            FILE *file;
-
-            printf("Welcome to the card creator!\n Please enter the values of the cards.\n");
             
-            printf("Name: ");
-            scanf("%s", &ncarta.Name);
-
-            printf("Type: ");
-            scanf("%s", &ncarta.Type);
-
-            printf("Life points: ");
-            scanf("%d", &ncarta.LP);
-
-            printf("Attack points: ");
-            scanf("%d", &ncarta.AP);
-
-            printf("Defense points: ");
-            scanf("%d", &ncarta.DP);
-            file = fopen("Cartas.txt", "a");
-            if(file ==NULL){
-                printf("Error while opening the file");
-            }
-            fprintf(file, "%s %s %d %d %d\n", ncarta.Name, ncarta.Type, ncarta.LP, ncarta.AP, ncarta.DP);
-
-            fclose(file);
-
-        printf("Card created and saved in 'Cartas.txt'!\n");
-        
             continue;
         }
         if(Select == 3){ //Mostrar historial
@@ -87,11 +59,8 @@ int main()
 
     }
 
-    struct Carta cartas[80]; //Baraja principal
-    struct Carta cartasJugador[15]; //Baraja del jugador
-    struct Carta cartasMaquina[15]; //Baraja de la maquina
-    
-    
+    struct Carta cartas[100]; //Creación de struct
+
     int NumeroCartas = 0; //Contador de cartas
 
     while (fscanf(file, "%s %s %d %d %d", cartas[NumeroCartas].Name, //Leer cartas desde archivo
@@ -104,7 +73,7 @@ int main()
             break;
         }
     }
-
+    
 
     fclose(file);
 
